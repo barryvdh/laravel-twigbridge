@@ -1,0 +1,21 @@
+{
+    "name": "barryvdh/laravel-twigbridge",
+    "description": "",
+    "authors": [
+        {
+            "name": "Barry vd. Heuvel",
+            "email": "barryvdh@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.0",
+        "illuminate/support": "4.0.x",
+        "twig/twig": "~1.8"
+    },
+    "autoload": {
+        "psr-0": {
+            "Barryvdh\\TwigBridge": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
