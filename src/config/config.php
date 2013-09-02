@@ -13,7 +13,7 @@ return array(
   */
     'options' => array(
         'debug' => Config::get('app.debug'),
-        'base_template_class' => 'Twig_Template',
+        'base_template_class' => 'Barryvdh\TwigBridge\Template',
         'charset' => 'utf-8',
         'strict_variables' => Config::get('app.debug'),
         'auto_reload' =>  Config::get('app.debug'),
