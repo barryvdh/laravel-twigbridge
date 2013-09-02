@@ -38,17 +38,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app['twig'] = $app->share(function ($app) {
                 $app['twig.options'] = array_replace(
-                    array(
-                        'charset'          => 'utf8',
-                        'debug'            => $app['config']['app.debug'],
-                        'strict_variables' => $app['config']['app.debug'],
-                    ), $app['twig.options']
+                    $app['config']['laravel-twigbridge::options'], $app['twig.options']
                 );
 
                 $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
                 $twig->addGlobal('app', $app);
 
-                if ($app['config']['app.debug']) {
+                if ( $app['twig.options']['debug']) {
                     $twig->addExtension(new \Twig_Extension_Debug());
                 }
 
@@ -105,6 +101,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
 
 	}
+
+    /**
+     * Bootstrap the application events.
+     *
+     * @return void
+     */
+    public function boot(){
+        $this->package('barryvdh/laravel-twigbridge');
+    }
 
 	/**
 	 * Get the services provided by the provider.

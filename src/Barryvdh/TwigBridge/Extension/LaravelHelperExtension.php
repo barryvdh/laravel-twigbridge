@@ -6,6 +6,13 @@ use Twig_Extension;
 
 class LaravelHelperExtension extends Twig_Extension
 {
+    protected $filters;
+    protected $functions;
+
+    public function __construct(){
+        $this->filters = \Config::get('laravel-twigbridge::filters', array());
+        $this->functions = \Config::get('laravel-twigbridge::functions', array());
+    }
 
     public function getName(){
         return 'laravel_helper_extension';
@@ -14,16 +21,7 @@ class LaravelHelperExtension extends Twig_Extension
     public function getFunctions(){
 
         $functions = array();
-        $helper_functions = array(
-            'asset',
-            'link_to',
-            'action',
-            'url',
-            'trans',
-            'trans_choice'
-        );
-
-        foreach ($helper_functions as $method => $twigFunction) {
+        foreach ($this->functions as $method => $twigFunction) {
             if (is_string($twigFunction)) {
                 $methodName = $twigFunction;
             } elseif (is_callable($twigFunction)) {
@@ -46,20 +44,7 @@ class LaravelHelperExtension extends Twig_Extension
     {
         $filters = array();
 
-        $helper_filters = array(
-
-            'camel_case',
-            'snake_case',
-            'studly_case',
-            'plural',
-            'singular',
-            'trans',
-            'trans_choice',
-            'str_finish'
-
-        );
-
-        foreach ($helper_filters as $method => $twigFilter) {
+        foreach ($this->filters as $method => $twigFilter) {
             if (is_string($twigFilter)) {
                 $methodName = $twigFilter;
             } elseif (is_callable($twigFilter)) {
