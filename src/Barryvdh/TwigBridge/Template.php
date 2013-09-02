@@ -35,5 +35,16 @@ abstract class Template extends Twig_Template
         parent::display($context, $blocks);
     }
 
+    protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false){
+
+        if( ! is_object($object) or ! isset($object->{$item})){
+           $value = parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
+        }else{
+            $value = $object->{$item};
+        }
+        return $value;
+
+    }
+
 
 }
