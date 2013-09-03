@@ -37,11 +37,21 @@ abstract class Template extends Twig_Template
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false){
 
-        if( ! is_object($object) or ! isset($object->{$item})){
-           $value = parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
-        }else{
+        $mutator = "get".studly_case($item).'Attribute';
+        if(
+            Twig_Template::METHOD_CALL !== $type //Don't handle Method Calls
+            and $object instanceof \Illuminate\Database\Eloquent\Model //Only handle Models
+            and (
+                isset($object->{$item})     //Normal attribute
+                or method_exists($object, $mutator)     //getMutator
+                or method_exists($object, $item)    //Relation
+            )){
             $value = $object->{$item};
+        }else{
+            $value = parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
         }
+
+
         return $value;
 
     }
