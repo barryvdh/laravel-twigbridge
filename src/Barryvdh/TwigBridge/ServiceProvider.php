@@ -38,7 +38,9 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app['twig'] = $app->share(function ($app) {
                 $app['twig.options'] = array_replace(
-                    $app['config']['laravel-twigbridge::options'], $app['twig.options']
+                    $app['config']->get('laravel-twigbridge::config.options', array(
+                            'debug' => $app['config']['app.debug'],
+                        )), $app['twig.options']
                 );
 
                 $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
