@@ -11,28 +11,26 @@ use Twig_Template;
 abstract class Template extends Twig_Template
 {
 
-    public function display(array $context, array $blocks = array())
+    protected function getViewName(){
+        $name = $this->getTemplateName();
+        if(\Str::endsWith($name, '.twig')){
+            $name = substr($name, 0, -5);
+        }
+        $name = str_replace(DIRECTORY_SEPARATOR, '.', $name);
+        return $name;
+
+    }
+    public function displayBlock($name, array $context, array $blocks = array())
     {
-        //Remove the extension if needed
-        $template_name = $this->getTemplateName();
-        if(\Str::endsWith($template_name, '.twig')){
-            $template_name = substr($template_name, 0, -5);
-        }
+        $env  = $context['__env'];
 
-        // Check the events and if needed, call the creator and composer
-        $dispatcher = \App::make('events');
-        if ($dispatcher->hasListeners('composing: '.$template_name) or $dispatcher->hasListeners('creating: '.$template_name)) {
+        \View::callCreator($view = new \Illuminate\View\View($env, $env->getEngineResolver()->resolve('twig'), $this->getViewName(), null, $context));
 
-            $env  = $context['__env'];
+        \View::callComposer($view);
 
-            \View::callCreator($view = new \Illuminate\View\View($env, $env->getEngineResolver()->resolve('twig'), $template_name, null, $context));
+        $context = $view->getData();
 
-            \View::callComposer($view);
-
-            $context = $view->getData();
-        }
-
-        parent::display($context, $blocks);
+        parent::displayBlock($name, $context, $blocks);
     }
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false){
