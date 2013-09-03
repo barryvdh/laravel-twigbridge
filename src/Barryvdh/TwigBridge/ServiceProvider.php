@@ -50,6 +50,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 $twig->addExtension(new Extension\LaravelHelperExtension());
 
+                //Test if Symfony TwigBridge is available
+                if (class_exists('Symfony\Bridge\Twig\Extension\TranslationExtension')) {
+                    if (isset($app['translator'])) {
+                        $twig->addExtension(new TranslationExtension($app['translator']));
+                    }
+                }
+
                 // Register Twig callback to handle undefined functions
                 $twig->registerUndefinedFunctionCallback(
                     function ($name) {
