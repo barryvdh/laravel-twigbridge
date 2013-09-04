@@ -58,33 +58,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                         $twig->addExtension(new TranslationExtension($app['translator']));
                     }
                 }
-
-                // Register Twig callback to handle undefined functions
-                $twig->registerUndefinedFunctionCallback(
-                    function ($name) {
-                        return new \Twig_SimpleFunction($name, function () use ($name) {
-                            //Check if it is a facade/method divided by _
-                            if(strpos($name, '_') !== false){
-                                //List the facade and method
-                                list($facade, $method) = explode('_', $name, 2);
-
-                                // Try the StudlyCase and UPPERCASE to check if it doesn't exist.
-                                if(!class_exists($facade)){
-                                    $facade = studly_case($facade);
-                                }
-                                if(!class_exists($facade)){
-                                    $facade = strtoupper($facade);
-                                }
-                                //If it exists, call the facade
-                                if(class_exists($facade)){
-                                        return call_user_func_array(array($facade, $method), func_get_args());
-                                }
-                            }
-                            return false;
-                        });
-                    }
-                );
-
                 return $twig;
             });
 
