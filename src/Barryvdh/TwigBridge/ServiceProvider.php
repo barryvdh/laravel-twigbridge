@@ -61,19 +61,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return $twig;
             });
 
-        $app['twig.loader.filesystem'] = $app->share(function ($app) {
-                return new \Twig_Loader_Filesystem($app['twig.path']);
-            });
-
-        $app['twig.loader.array'] = $app->share(function ($app) {
-                return new \Twig_Loader_Array($app['twig.templates']);
-            });
-
         $app['twig.loader'] = $app->share(function ($app) {
-                return new \Twig_Loader_Chain(array(
-                    $app['twig.loader.array'],
-                    $app['twig.loader.filesystem'],
-                ));
+                return new Loader($app['view']->getFinder());
             });
 
         // Register the view engine:
@@ -81,7 +70,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             {
                 return new TwigEngine($app['twig']);
             });
-
 	}
 
     /**

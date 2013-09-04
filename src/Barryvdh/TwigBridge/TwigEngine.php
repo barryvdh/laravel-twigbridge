@@ -24,12 +24,6 @@ class TwigEngine implements EngineInterface
 
     public function get($path, array $data = array()){
 
-        //Strip the full path to leave to name
-        foreach(\App::make('twig.path') as $dir){
-            $path =  str_replace($dir, '', $path);
-        }
-        $path = ltrim($path, '/');
-
         return $this->load($path)->render($data);
     }
 
