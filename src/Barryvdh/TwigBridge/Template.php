@@ -20,7 +20,7 @@ abstract class Template extends Twig_Template
         return $name;
 
     }
-    public function displayBlock($name, array $context, array $blocks = array())
+    public function display(array $context, array $blocks = array())
     {
         $env  = $context['__env'];
 
@@ -30,27 +30,24 @@ abstract class Template extends Twig_Template
 
         $context = $view->getData();
 
-        parent::displayBlock($name, $context, $blocks);
+        parent::display($context, $blocks);
     }
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false){
 
-        $mutator = "get".studly_case($item).'Attribute';
         if(
             Twig_Template::METHOD_CALL !== $type //Don't handle Method Calls
-            and $object instanceof \Illuminate\Database\Eloquent\Model //Only handle Models
+            and is_a($object,'Illuminate\Database\Eloquent\Model') //Only handle Models
             and (
                 isset($object->{$item})     //Normal attribute
-                or method_exists($object, $mutator)     //getMutator
-                or method_exists($object, $item)    //Relation
-            )){
-            $value = $object->{$item};
+                or $object->hasGetMutator($item)    //via Mutator
+                or method_exists($object, camel_case($item))    //Relation
+            )
+        ){
+            return $object->getAttribute($item);
         }else{
-            $value = parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
+            return parent::getAttribute($object, $item, $arguments, $type, $isDefinedTest, $ignoreStrictCheck);
         }
-
-
-        return $value;
 
     }
 
