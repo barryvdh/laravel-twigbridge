@@ -20,7 +20,7 @@ abstract class Template extends Twig_Template
         return $name;
 
     }
-    public function display(array $context, array $blocks = array())
+    public function displayBlock($name, array $context, array $blocks = array())
     {
         $env  = $context['__env'];
 
@@ -30,7 +30,7 @@ abstract class Template extends Twig_Template
 
         $context = $view->getData();
 
-        parent::display($context, $blocks);
+        parent::displayBlock($name, $context, $blocks);
     }
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false){
