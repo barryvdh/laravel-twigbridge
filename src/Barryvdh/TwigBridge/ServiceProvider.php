@@ -31,6 +31,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	{
         $app = $this->app;
 
+        $extension = $app['config']->get('laravel-twigbridge::config.extension', 'twig');
+
         $app['twig.options'] = array();
         $app['twig.form.templates'] = array();
         $app['twig.path'] = $app['view']->getFinder()->getPaths();
@@ -40,6 +42,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $app['twig.options'] = array_replace(
                     $app['config']->get('laravel-twigbridge::config.options', array(
                             'debug' => $app['config']['app.debug'],
+                            'cache' =>  $app['path.storage'].'/views/twig',
+                            'base_template_class' => 'Barryvdh\TwigBridge\TwigTemplate',
                         )), $app['twig.options']
                 );
 
@@ -55,18 +59,40 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 //Test if Symfony TwigBridge is available
                 if (class_exists('Symfony\Bridge\Twig\Extension\TranslationExtension')) {
                     if (isset($app['translator'])) {
-                        $twig->addExtension(new TranslationExtension($app['translator']));
+                        $twig->addExtension(new \Symfony\Bridge\Twig\Extension\TranslationExtension($app['translator']));
                     }
                 }
                 return $twig;
             });
 
-        $app['twig.loader'] = $app->share(function ($app) {
-                return new Loader($app['view']->getFinder());
+        $app['twig.loader.path'] = $app->share(function () {
+                return new Loader\PathLoader();
             });
 
+        $app['twig.loader.viewfinder'] = $app->share(function ($app) use($extension) {
+                return new Loader\ViewfinderLoader($app['view']->getFinder(), $extension);
+            });
+
+        $app['twig.loader.filesystem'] = $app->share(function ($app) {
+                return new \Twig_Loader_Filesystem($app['twig.path']);
+            });
+
+        $app['twig.loader.array'] = $app->share(function ($app) {
+                return new \Twig_Loader_Array($app['twig.templates']);
+            });
+
+        $app['twig.loader'] = $app->share(function ($app) {
+                return new \Twig_Loader_Chain(array(
+                    $app['twig.loader.path'],
+                    $app['twig.loader.array'],
+                    $app['twig.loader.viewfinder'],
+                    $app['twig.loader.filesystem'],
+                ));
+            });
+
+
         // Register the view engine:
-        $app['view']->addExtension('twig', 'twig', function () use ($app)
+        $app['view']->addExtension($extension, 'twig', function () use ($app)
             {
                 return new TwigEngine($app['twig']);
             });

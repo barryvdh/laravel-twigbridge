@@ -8,29 +8,31 @@ use Twig_Template;
 /**
  * Default base class for compiled templates.
  */
-abstract class Template extends Twig_Template
+abstract class TwigTemplate extends Twig_Template
 {
 
     protected function getViewName(){
         $name = $this->getTemplateName();
-        if(\Str::endsWith($name, '.twig')){
-            $name = substr($name, 0, -5);
-        }
-        $name = str_replace(DIRECTORY_SEPARATOR, '.', $name);
+
         return $name;
 
+
     }
-    public function displayBlock($name, array $context, array $blocks = array())
+    public function display( array $context, array $blocks = array())
     {
-        $env  = $context['__env'];
 
-        \View::callCreator($view = new \Illuminate\View\View($env, $env->getEngineResolver()->resolve('twig'), $this->getViewName(), null, $context));
+        //The first time, PathLoader is used so we only have the full path, not a name. The first creator/composers are run from View::make, so just skip that.
+        if(!is_file($this->getTemplateName())){
 
-        \View::callComposer($view);
+            $env  = $context['__env'];
+            \View::callCreator($view = new \Illuminate\View\View($env, $env->getEngineResolver()->resolve('twig'), $this->getViewName(), null, $context));
 
-        $context = $view->getData();
+            \View::callComposer($view);
 
-        parent::displayBlock($name, $context, $blocks);
+            $context = $view->getData();
+        }
+
+        parent::display($context, $blocks);
     }
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false){
