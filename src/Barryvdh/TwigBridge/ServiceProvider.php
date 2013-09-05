@@ -29,6 +29,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	 */
 	public function register()
 	{
+        $this->package('barryvdh/laravel-twigbridge');
+
         $app = $this->app;
 
         $extension = $app['config']->get('laravel-twigbridge::config.extension', 'twig');
@@ -40,11 +42,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app['twig'] = $app->share(function ($app) {
                 $app['twig.options'] = array_replace(
-                    $app['config']->get('laravel-twigbridge::config.options', array(
-                            'debug' => $app['config']['app.debug'],
-                            'cache' =>  $app['path.storage'].'/views/twig',
-                            'base_template_class' => 'Barryvdh\TwigBridge\TwigTemplate',
-                        )), $app['twig.options']
+                    array(
+                        'debug' => $app['config']['app.debug'],
+                        'cache' => $app['path.storage'].'/views/twig',
+                        'base_template_class' => 'Barryvdh\TwigBridge\TwigTemplate',
+                    ),
+                    $app['config']->get('laravel-twigbridge::config.options', array()),
+                    $app['twig.options']
                 );
 
                 $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
@@ -96,25 +100,50 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             {
                 return new TwigEngine($app['twig']);
             });
+
+        $this->registerCommands();
 	}
 
+    /**
+     * Register the cache related console commands.
+     *
+     * @return void
+     */
+    public function registerCommands()
+    {
+        $this->app['command.twig.clear'] = $this->app->share(
+            function ($app) {
+                return new Console\ClearCommand($app['twig'], $app['files']);
+            }
+        );
+
+        $this->commands(
+            'command.twig.clear'
+        );
+    }
+
+    /**
+     * Get the services provided by the provider.
+     *
+     * @return array
+     */
+    public function provides()
+    {
+        return array(
+            'twig',
+            'twig.form.templates', 'twig.path', 'twig.templates', 'twig.options',
+            'twig.loader', 'twig.loader.path', 'twig.loader.viewfinder', 'twig.loader.array', 'twig.loader.filesystem',
+            'command.twig.clear'
+        );
+    }
     /**
      * Bootstrap the application events.
      *
      * @return void
      */
     public function boot(){
-        $this->package('barryvdh/laravel-twigbridge');
+
     }
 
-	/**
-	 * Get the services provided by the provider.
-	 *
-	 * @return array
-	 */
-	public function provides()
-	{
-		return array();
-	}
 
 }
