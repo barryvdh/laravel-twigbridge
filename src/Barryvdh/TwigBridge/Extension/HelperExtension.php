@@ -4,7 +4,7 @@ namespace Barryvdh\TwigBridge\Extension;
 use InvalidArgumentException;
 use Twig_Extension;
 
-class LaravelHelperExtension extends Twig_Extension
+class HelperExtension extends Twig_Extension
 {
     protected $filters;
     protected $functions;
