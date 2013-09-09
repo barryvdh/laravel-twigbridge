@@ -55,7 +55,7 @@ class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterfa
      */
     public function getCacheKey($name)
     {
-        return $this->findTemplate($name);
+        return md5($name);
     }
 
     /**

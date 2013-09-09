@@ -32,7 +32,7 @@ class PathLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
      */
     public function getCacheKey($name)
     {
-        return $this->findTemplate($name);
+        return md5($name);
     }
 
     /**
