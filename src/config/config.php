@@ -55,6 +55,10 @@ return array(
         'str_finish',
         'str_plural',
         'str_singular'
+    ),
+
+    'facades' => array(
+
     )
 
 

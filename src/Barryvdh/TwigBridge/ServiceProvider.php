@@ -59,6 +59,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 }
 
                 $twig->addExtension(new Extension\HelperExtension());
+                $twig->addExtension(new Extension\FacadeExtension());
 
                 //Test if Symfony TwigBridge is available
                 if (class_exists('Symfony\Bridge\Twig\Extension\TranslationExtension')) {
