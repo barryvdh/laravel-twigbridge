@@ -40,11 +40,11 @@ abstract class TwigTemplate extends Twig_Template
         if(
             Twig_Template::METHOD_CALL !== $type //Don't handle Method Calls
             and is_a($object,'Illuminate\Database\Eloquent\Model') //Only handle Models
-            and (
+         /*   and (
                 isset($object->{$item})     //Normal attribute
                 or $object->hasGetMutator($item)    //via Mutator
                 or method_exists($object, camel_case($item))    //Relation
-            )
+            )*/
         ){
             return $object->getAttribute($item);
         }else{
