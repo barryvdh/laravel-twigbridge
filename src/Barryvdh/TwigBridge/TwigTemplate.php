@@ -32,7 +32,13 @@ abstract class TwigTemplate extends Twig_Template
             $context = $view->getData();
         }
 
-        parent::display($context, $blocks);
+        try{
+            parent::display($context, $blocks);
+        }catch(\Exception $e){
+            ob_get_clean();
+            echo get_class($e) .': '. $e->getMessage();
+            exit();
+        }
     }
 
     protected function getAttribute($object, $item, array $arguments = array(), $type = Twig_Template::ANY_CALL, $isDefinedTest = false, $ignoreStrictCheck = false){
