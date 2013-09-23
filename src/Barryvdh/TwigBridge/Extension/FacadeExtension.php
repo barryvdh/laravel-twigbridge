@@ -19,19 +19,11 @@ class FacadeExtension extends Twig_Extension
     public function getGlobals(){
         $facades = array();
         foreach($this->facades as $facade){
-            if($root = $this->resolve($facade)){
-                $facades[$facade] = $root;
-            }
+            $caller = new ClassCaller;
+            $caller->setClass($facade);
+            $facades[$facade] = $caller;
         }
         return $facades;
-    }
-
-    protected function resolve($name){
-        if(class_exists($name) && is_callable("$name::getFacadeRoot")){
-            return $name::getFacadeRoot();
-        }else{
-            return false;
-        }
     }
 
 }
