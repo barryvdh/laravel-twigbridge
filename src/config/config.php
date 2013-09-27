@@ -58,7 +58,10 @@ return array(
     ),
 
     'facades' => array(
-
+        'Auth',
+        'Config',
+        'Form',
+        'HTML',
     )
 
 
