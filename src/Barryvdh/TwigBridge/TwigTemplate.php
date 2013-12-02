@@ -25,13 +25,9 @@ abstract class TwigTemplate extends Twig_Template
             \View::callComposer($view);
             $context = $view->getData();
         }
-        try{
-            parent::display($context, $blocks);
-        }catch(\Exception $e){
-            ob_get_clean();
-            echo get_class($e) .': '. $e->getMessage();
-            exit();
-        }
+
+        parent::display($context, $blocks);
+
     }
 
     /**
