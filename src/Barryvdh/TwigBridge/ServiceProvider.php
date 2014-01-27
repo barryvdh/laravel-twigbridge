@@ -53,6 +53,10 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
                 $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
                 $twig->addGlobal('app', $app);
+                foreach ($app['view']->getShared() as $key => $value)
+                {
+                    $twig->addGlobal($key, $value);
+                }
 
                 if ( $app['twig.options']['debug']) {
                     $twig->addExtension(new \Twig_Extension_Debug());
