@@ -22,18 +22,31 @@ class HelperExtension extends Twig_Extension
 
         $functions = array();
         foreach ($this->functions as $method => $twigFunction) {
-            if (is_string($twigFunction)) {
-                $methodName = $twigFunction;
-            } elseif (is_callable($twigFunction)) {
-                $methodName = $method;
-            } else {
-                throw new InvalidArgumentException('Incorrect function type');
+            $options = array();
+            if(is_a($twigFunction, 'Twig_SimpleFunction')){
+                $function = $twigFunction;
+            }else{
+                if(is_array($twigFunction)){
+                    $methodName = $method;
+                    $options = $twigFunction;
+                    if(isset($options['callback'])){
+                        $twigFunction = $options['callback'];
+                        unset($options['callback']);
+                    }else{
+                        $twigFunction = $method;
+                    }
+                } elseif (is_string($twigFunction)) {
+                    $methodName = $twigFunction;
+                } elseif (is_callable($twigFunction)) {
+                    $methodName = $method;
+                } else {
+                    throw new InvalidArgumentException('Incorrect function type');
+                }
+
+                $function = new \Twig_SimpleFunction($methodName, function () use ($twigFunction) {
+                    return call_user_func_array($twigFunction, func_get_args());
+                }, $options);
             }
-
-            $function = new \Twig_SimpleFunction($methodName, function () use ($twigFunction) {
-                return call_user_func_array($twigFunction, func_get_args());
-            });
-
             $functions[] = $function;
         }
 
@@ -43,24 +56,35 @@ class HelperExtension extends Twig_Extension
     public function getFilters()
     {
         $filters = array();
-
         foreach ($this->filters as $method => $twigFilter) {
-            if (is_string($twigFilter)) {
-                $methodName = $twigFilter;
-            } elseif (is_callable($twigFilter)) {
-                $methodName = $method;
-            } else {
-                throw new InvalidArgumentException('Incorrect function filter');
+            $options = array();
+            if(is_a($twigFilter, 'Twig_SimpleFilter')){
+                $filter = $twigFilter;
+            }else{
+                if(is_array($twigFilter)){
+                    $methodName = $method;
+                    $options = $twigFilter;
+                    if(isset($options['callback'])){
+                        $twigFilter = $options['callback'];
+                        unset($options['callback']);
+                    }else{
+                        $twigFilter = $method;
+                    }
+                } elseif (is_string($twigFilter)) {
+                    $methodName = $twigFilter;
+                } elseif (is_callable($twigFilter)) {
+                    $methodName = $method;
+                } else {
+                    throw new InvalidArgumentException('Incorrect function filter');
+                }
+
+                $filter = new \Twig_SimpleFilter($methodName, function () use ($twigFilter) {
+                    return call_user_func_array($twigFilter, func_get_args());
+                }, $options);
             }
 
-            $function = new \Twig_SimpleFilter($methodName, function () use ($twigFilter) {
-                return call_user_func_array($twigFilter, func_get_args());
-            });
-
-            $filters[] = $function;
+            $filters[] = $filter;
         }
-
-
 
         return $filters;
     }
