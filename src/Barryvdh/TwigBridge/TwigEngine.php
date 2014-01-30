@@ -10,16 +10,16 @@ use Twig_Environment;
 class TwigEngine implements EngineInterface
 {
 
-    protected $environment;
+    protected $twig;
 
     /**
      * Constructor.
      *
-     * @param \Twig_Environment           $environment A \Twig_Environment instance
+     * @param \Twig_Environment $twig A \Twig_Environment instance
      */
-    public function __construct(\Twig_Environment $environment)
+    public function __construct(\Twig_Environment $twig)
     {
-        $this->environment = $environment;
+        $this->twig = $twig;
     }
 
     public function get($path, array $data = array())
@@ -50,7 +50,7 @@ class TwigEngine implements EngineInterface
         }
 
         try {
-            return $this->environment->loadTemplate($name);
+            return $this->twig->loadTemplate($name);
         } catch (\Twig_Error_Loader $e) {
             throw new \InvalidArgumentException("Error in $name: ". $e->getMessage(), $e->getCode(), $e);
         }
