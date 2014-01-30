@@ -22,9 +22,16 @@ class TwigEngine implements EngineInterface
         $this->environment = $environment;
     }
 
-    public function get($path, array $data = array()){
-
-        return $this->load($path)->render($data);
+    public function get($path, array $data = array())
+    {
+        $template = $this->load($path);
+        
+        if($template instanceof TwigTemplate){
+            //Events are already fired by the View Environment
+            $template->setFiredEvents(true);
+        }
+        
+        return $template->render($data);
     }
 
     /**

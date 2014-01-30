@@ -10,24 +10,45 @@ use Illuminate\View\View;
  */
 abstract class TwigTemplate extends Twig_Template
 {
-
+    protected $firedEvents = false;
+    
     /**
      * {@inheritdoc}
      */
     public function display( array $context, array $blocks = array())
     {
-        $name = $this->getTemplateName();
-        //The first time, PathLoader is used so we only have the full path, not a name. The first creator/composers are run from View::make, so just skip that.
-        if(!is_file($name)){
-            /** @var \Illuminate\View\Environment $env */
-            $env  = $context['__env'];
-            \View::callCreator($view = new View($env, $env->getEngineResolver()->resolve('twig'), $name, null, $context));
-            \View::callComposer($view);
-            $context = $view->getData();
+        $context = $this->fireEvents($context);
+        parent::display($context, $blocks);
+    }
+    
+    /**
+     * Fire the creator/composer events to merge context data.
+     * @param $context
+     * @return array
+     */
+    protected function fireEvents($context){
+        // Only fire events once
+        if($this->firedEvents){
+            return $context;
         }
 
-        parent::display($context, $blocks);
+        /** @var \Illuminate\View\Environment $env */
+        $env  = $context['__env'];
+        \View::callCreator($view = new View($env, $env->getEngineResolver()->resolve('twig'), $this->getTemplateName(), null, $context));
+        \View::callComposer($view);
 
+        $this->setFiredEvents(true);
+
+        return $view->getData();
+    }
+
+    /**
+     * Set the firedEvents flag, to make sure composers/creators only fire once.
+     *
+     * @param bool $fired
+     */
+    public function setFiredEvents($fired=true){
+        $this->firedEvents = $fired;
     }
 
     /**
