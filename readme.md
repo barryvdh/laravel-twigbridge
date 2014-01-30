@@ -1,8 +1,13 @@
 ### Laravel 4 TwigBridge
 
-
-Trying out some different things, to match the Silex ServiceProvider more closely (same container bindings etc). Als basic filter/function helpers for Laravel and possibility to call Facades.
-
+An alternative to https://github.com/rcrowe/TwigBridge which is more similar to the Silex TwigServiceProvider and supports:
+    - Using .twig files just like Blade/PHP Templates
+    - Supports creator/composer events
+    - Easily add helpers/filters (`{{ url('/') }}` or `{{ 'someThing' | snake_case }}`)
+    - Can call Facades (`{{ URL.to('/') }}`)
+    - Can be integrated with Assetic (https://github.com/barryvdh/laravel-assetic)
+    
+## Install
 Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-twigbridge:dev-master` directly):
 
     "barryvdh/laravel-twigbridge": "dev-master"
