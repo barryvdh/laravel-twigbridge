@@ -1,6 +1,7 @@
 {
     "name": "barryvdh/laravel-twigbridge",
-    "description": "",
+    "description": "Twig integration for Laravel 4",
+    "tags" : ['twig', 'laravel', 'twigbridge', 'bridge', 'views'],
     "authors": [
         {
             "name": "Barry vd. Heuvel",
