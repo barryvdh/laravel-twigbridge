@@ -1,5 +1,16 @@
 <?php namespace Barryvdh\TwigBridge;
 
+use Barryvdh\TwigBridge\Extension\AuthExtension;
+use Barryvdh\TwigBridge\Extension\ConfigExtension;
+use Barryvdh\TwigBridge\Extension\FacadeExtension;
+use Barryvdh\TwigBridge\Extension\FormExtension;
+use Barryvdh\TwigBridge\Extension\HelperExtension;
+use Barryvdh\TwigBridge\Extension\HtmlExtension;
+use Barryvdh\TwigBridge\Extension\SessionExtension;
+use Barryvdh\TwigBridge\Extension\StringExtension;
+use Barryvdh\TwigBridge\Extension\TranslatorExtension;
+use Barryvdh\TwigBridge\Extension\UrlExtension;
+
 use Barryvdh\TwigBridge\Console\ClearCommand;
 use Symfony\Bridge\Twig\Command\LintCommand;
 
@@ -57,15 +68,17 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     $twig->addExtension(new \Twig_Extension_Debug());
                 }
 
-                $twig->addExtension(new Extension\HelperExtension());
-                $twig->addExtension(new Extension\FacadeExtension());
+                $twig->addExtension(new AuthExtension($app['auth']));
+                $twig->addExtension(new ConfigExtension($app['config']));
+                $twig->addExtension(new FacadeExtension());
+                $twig->addExtension(new FormExtension($app['form']));
+                $twig->addExtension(new HelperExtension());
+                $twig->addExtension(new HtmlExtension($app['html']));
+                $twig->addExtension(new UrlExtension($app['url']));
+                $twig->addExtension(new SessionExtension($app['session']));
+                $twig->addExtension(new StringExtension());
+                $twig->addExtension(new TranslatorExtension($app['translator']));
 
-                //Test if Symfony TwigBridge is available
-                if (class_exists('Symfony\Bridge\Twig\Extension\TranslationExtension')) {
-                    if (isset($app['translator'])) {
-                        $twig->addExtension(new \Symfony\Bridge\Twig\Extension\TranslationExtension($app['translator']));
-                    }
-                }
                 return $twig;
             });
 
