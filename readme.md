@@ -1,6 +1,6 @@
 ## Laravel 4 TwigBridge
 
-An alternative to https://github.com/rcrowe/TwigBridge which is more similar to the Silex TwigServiceProvider and supports:
+This packages adds Twig as a Laravel Template Engine:
 
 * Use .twig files just like Blade/PHP Templates
 * Supports creator/composer events
@@ -89,5 +89,7 @@ You can also use an instance of Twig_SimpleFunction or Twig_SimpleFilter. Beside
         'MyModel'
     )
     
+### Extend
 
+The Twig_Environment is available in \App::make('twig'), so you can change the lexer, add Extensions etc.
  
