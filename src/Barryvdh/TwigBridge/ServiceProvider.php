@@ -1,12 +1,7 @@
 <?php namespace Barryvdh\TwigBridge;
 
-
-use Symfony\Bridge\Twig\Extension\RoutingExtension;
-use Symfony\Bridge\Twig\Extension\TranslationExtension;
-use Symfony\Bridge\Twig\Extension\FormExtension;
-use Symfony\Bridge\Twig\Extension\SecurityExtension;
-use Symfony\Bridge\Twig\Form\TwigRendererEngine;
-use Symfony\Bridge\Twig\Form\TwigRenderer;
+use Barryvdh\TwigBridge\Console\ClearCommand;
+use Symfony\Bridge\Twig\Command\LintCommand;
 
 /**
  * Twig integration for Laravel 4
@@ -113,12 +108,20 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
     {
         $this->app['command.twig.clear'] = $this->app->share(
             function ($app) {
-                return new Console\ClearCommand($app['twig'], $app['files']);
+                return new ClearCommand($app['twig'], $app['files']);
+            }
+        );
+
+        $this->app['command.twig.lint'] = $this->app->share(
+            function ($app) {
+                $lintCommand =  new LintCommand('twig:lint');
+                $lintCommand->setTwigEnvironment($app['twig']);
+                return $lintCommand;
             }
         );
 
         $this->commands(
-            'command.twig.clear'
+            'command.twig.clear', 'command.twig.lint'
         );
     }
 
@@ -133,7 +136,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             'twig',
             'twig.form.templates', 'twig.path', 'twig.templates', 'twig.options',
             'twig.loader', 'twig.loader.viewfinder', 'twig.loader.array', 'twig.loader.filesystem',
-            'command.twig.clear'
+            'command.twig.clear', 'command.twig.lint'
         );
     }
     /**

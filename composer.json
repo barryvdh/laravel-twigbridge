@@ -12,7 +12,8 @@
     "require": {
         "php": ">=5.3.0",
         "illuminate/support": "4.x",
-        "twig/twig": "~1.8"
+        "twig/twig": "~1.12",
+        "symfony/twig-bridge": ">=2.3"
     },
     "autoload": {
         "psr-0": {
