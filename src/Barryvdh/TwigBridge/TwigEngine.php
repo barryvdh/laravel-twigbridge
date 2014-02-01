@@ -9,19 +9,25 @@ use Twig_Environment;
  */
 class TwigEngine implements EngineInterface
 {
-
-    protected $twig;
+    protected $environment;
 
     /**
      * Constructor.
      *
-     * @param \Twig_Environment $twig A \Twig_Environment instance
+     * @param \Twig_Environment $environment A \Twig_Environment instance
      */
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(\Twig_Environment $environment)
     {
-        $this->twig = $twig;
+        $this->environment = $environment;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * It also supports \Twig_Template as name parameter.
+     *
+     * @throws \Twig_Error if something went wrong like a thrown exception while rendering the template
+     */
     public function get($path, array $data = array())
     {
         $template = $this->load($path);
@@ -37,7 +43,7 @@ class TwigEngine implements EngineInterface
     /**
      * Loads the given template.
      *
-     * @param mixed $name A template name or an instance of Twig_Template
+     * @param string|TemplateReferenceInterface|\Twig_Template $name A template name or an instance of Twig_Template
      *
      * @return \Twig_TemplateInterface A \Twig_TemplateInterface instance
      *
@@ -50,9 +56,9 @@ class TwigEngine implements EngineInterface
         }
 
         try {
-            return $this->twig->loadTemplate($name);
+            return $this->environment->loadTemplate((string) $name);
         } catch (\Twig_Error_Loader $e) {
-            throw new \InvalidArgumentException("Error in $name: ". $e->getMessage(), $e->getCode(), $e);
+            throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }
 
