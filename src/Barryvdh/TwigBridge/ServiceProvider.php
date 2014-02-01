@@ -74,10 +74,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return $twig;
             });
 
-        $app['twig.loader.path'] = $app->share(function () {
-                return new Loader\PathLoader();
-            });
-
         $app['twig.loader.viewfinder'] = $app->share(function ($app) use($extension) {
                 return new Loader\ViewfinderLoader($app['view']->getFinder(), $extension);
             });
@@ -92,7 +88,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app['twig.loader'] = $app->share(function ($app) {
                 return new \Twig_Loader_Chain(array(
-                    $app['twig.loader.path'],
                     $app['twig.loader.array'],
                     $app['twig.loader.viewfinder'],
                     $app['twig.loader.filesystem'],
@@ -137,7 +132,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
         return array(
             'twig',
             'twig.form.templates', 'twig.path', 'twig.templates', 'twig.options',
-            'twig.loader', 'twig.loader.path', 'twig.loader.viewfinder', 'twig.loader.array', 'twig.loader.filesystem',
+            'twig.loader', 'twig.loader.viewfinder', 'twig.loader.array', 'twig.loader.filesystem',
             'command.twig.clear'
         );
     }

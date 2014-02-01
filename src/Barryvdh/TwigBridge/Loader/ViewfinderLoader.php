@@ -24,6 +24,8 @@ class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterfa
 
         if(isset($this->cache[$name])){
             return $this->cache[$name];
+        }elseif($this->files->exists($name)){
+            return $this->cache[$name] = $name;
         }else{
             $view = $name;
             $ext = ".".$this->extension;
