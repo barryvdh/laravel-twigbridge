@@ -41,12 +41,13 @@ Functions:
  * config_get, config_has
  * session_has, session_get, csrf_token
  * trans, trans_choice
- * form_* (All the Form::* methods)
- * html_* (All the Html::* methods)
+ * form_* (All the Form::* methods, snake_cased)
+ * html_* (All the Html::* methods, snake_cased)
+ * str_* (All the Str::* methods, snake_cased)
  
 Filters:
  * camel_case, snake_case, studly_case
- * str_* (All the Str::* methods)
+ * str_* (All the Str::* methods, snake_cased)
  
 Global variables:
  * app: the Illuminate\Foundation\Application object

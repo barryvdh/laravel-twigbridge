@@ -2,7 +2,7 @@
 namespace Barryvdh\TwigBridge\Extension;
 
 use  Illuminate\Html\FormBuilder;
-
+use  Illuminate\Support\Str;
 
 class FormExtension extends \Twig_Extension
 {
@@ -21,10 +21,9 @@ class FormExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('form_*', function($name) use($form){
                 $arguments = array_slice(func_get_args(), 1);
+                $name = Str::camel($name);
                 return call_user_func_array(array($form, $name), $arguments);
-            }, array('is_safe' => array('html'))),
-
+            }, array('is_safe' => array('html')))
         );
     }
-
 }
