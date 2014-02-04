@@ -5,10 +5,11 @@ This packages adds Twig as a Laravel Template Engine:
 * Use .twig files just like Blade/PHP Templates
 * Supports creator/composer events
 * Easily add helpers/filters (`{{ url('/') }}` or `{{ 'someThing' | snake_case }}`)
-* Can call Facades (`{{ URL.to('/') }}`)
+* Can call Facades (`{{ MyModel.to('/') }}`)
 * Can be integrated with Assetic (https://github.com/barryvdh/laravel-assetic)
 * Default extensions for easier use.
 
+See http://twig.sensiolabs.org/ for more info about Twig Templating
     
 ### Install
 Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-twigbridge:dev-master` directly):
