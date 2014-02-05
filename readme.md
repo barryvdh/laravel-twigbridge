@@ -25,7 +25,7 @@ After install, you can just use View::make('index.twig'); or just View::make('in
 The .twig extension is not needed when creating the view, but some IDE's provide autocomplete when you use .twig (in Twig files).
 You can also use view composers/creators, just like in Blade templates.
 
-View::composer('profile.twig', function($view)
+    View::composer('profile.twig', function($view)
     {
         $view->with('count', User::count());
     });
