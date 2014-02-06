@@ -12,7 +12,6 @@ use Barryvdh\TwigBridge\Extension\TranslatorExtension;
 use Barryvdh\TwigBridge\Extension\UrlExtension;
 
 use Barryvdh\TwigBridge\Console\ClearCommand;
-use Symfony\Bridge\Twig\Command\LintCommand;
 
 /**
  * Twig integration for Laravel 4
@@ -111,23 +110,25 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function registerCommands()
     {
+        $commands = array('command.twig.clear');
         $this->app['command.twig.clear'] = $this->app->share(
             function ($app) {
                 return new ClearCommand($app['twig'], $app['files']);
             }
         );
 
-        $this->app['command.twig.lint'] = $this->app->share(
-            function ($app) {
-                $lintCommand =  new LintCommand('twig:lint');
-                $lintCommand->setTwigEnvironment($app['twig']);
-                return $lintCommand;
-            }
-        );
+        if(class_exists('Symfony\Bridge\Twig\Command\LintCommand')){
+            $commands[] = 'command.twig.lint';
+            $this->app['command.twig.lint'] = $this->app->share(
+                function ($app) {
+                    $lintCommand =  new \Symfony\Bridge\Twig\Command\LintCommand('twig:lint');
+                    $lintCommand->setTwigEnvironment($app['twig']);
+                    return $lintCommand;
+                }
+            );
+        }
 
-        $this->commands(
-            'command.twig.clear', 'command.twig.lint'
-        );
+        $this->commands($commands);
     }
 
     /**
@@ -144,7 +145,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             'command.twig.clear', 'command.twig.lint'
         );
     }
-    
+
     /**
      * Bootstrap the application events.
      *
