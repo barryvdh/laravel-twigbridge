@@ -35,15 +35,13 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 	 */
 	public function register()
 	{
-        $this->package('barryvdh/laravel-twigbridge');
 
         $app = $this->app;
-
-        $extension = $app['config']->get('laravel-twigbridge::config.extension', 'twig');
-
         $app['twig.options'] = array();
         $app['twig.form.templates'] = array();
-        $app['twig.path'] = $app['view']->getFinder()->getPaths();
+        $app['twig.path'] = $app->share(function($app){
+            return $app['view']->getFinder()->getPaths();
+        });
         $app['twig.templates'] = array();
 
         $app['twig'] = $app->share(function ($app) {
@@ -82,7 +80,8 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 return $twig;
             });
 
-        $app['twig.loader.viewfinder'] = $app->share(function ($app) use($extension) {
+        $app['twig.loader.viewfinder'] = $app->share(function ($app) {
+                $extension = $app['config']->get('laravel-twigbridge::config.extension', 'twig');
                 return new Loader\ViewfinderLoader($app['view']->getFinder(), $extension);
             });
 
@@ -100,13 +99,6 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     $app['twig.loader.viewfinder'],
                     $app['twig.loader.filesystem'],
                 ));
-            });
-
-
-        // Register the view engine:
-        $app['view']->addExtension($extension, 'twig', function () use ($app)
-            {
-                return new TwigEngine($app['twig']);
             });
 
         $this->registerCommands();
@@ -152,6 +144,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             'command.twig.clear', 'command.twig.lint'
         );
     }
+    
     /**
      * Bootstrap the application events.
      *
@@ -159,7 +152,16 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
      */
     public function boot(){
 
-    }
+        $app = $this->app;
 
+        $this->package('barryvdh/laravel-twigbridge');
+        $extension = $app['config']->get('laravel-twigbridge::config.extension', 'twig');
+
+        // Register the view engine:
+        $app['view']->addExtension($extension, 'twig', function () use ($app)
+        {
+            return new TwigEngine($app['twig']);
+        });
+    }
 
 }
