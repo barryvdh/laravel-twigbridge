@@ -25,7 +25,7 @@ return array(
   |                 determined automatically based on the debug value.
   |
   |   * strict_variables: Whether to ignore invalid variables in templates
-  |                      (default to false).
+  |                      (default is true).
   |
   |   * autoescape: Whether to enable auto-escaping (default to html):
   |                   * false: disable auto-escaping
@@ -39,7 +39,8 @@ return array(
   |
   */
     'options' => array(
-
+        'strict_variables' => true,
+        'autoescape' => true,
     ),
 
 
