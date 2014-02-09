@@ -2,9 +2,11 @@
 namespace Barryvdh\TwigBridge\Loader;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\View\FileViewFinder ;
+use Illuminate\View\FileViewFinder;
 use Twig_LoaderInterface;
 use Twig_ExistsLoaderInterface;
+use InvalidArgumentException;
+use Twig_Error_Loader;
 
 class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
 {
@@ -33,7 +35,13 @@ class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterfa
             if(substr($view, -$len) == $ext){
                 $view = substr($view, 0, -$len);
             }
-            return $this->cache[$name] = $this->finder->find($view);
+
+            try {
+                $this->cache[$name] = $this->finder->find($view);
+            } catch (InvalidArgumentException $e) {
+                throw new Twig_Error_Loader(sprintf('Unable to find template "%s"', $name));
+            }
+            return $this->cache[$name];
         }
     }
     /**
@@ -49,7 +57,12 @@ class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterfa
      */
     public function exists($name)
     {
-        return $this->files->exists( $this->findTemplate($name) );
+        try {
+            $this->findTemplate($name);
+            return true;
+        } catch (Twig_Error_Loader $exception) {
+            return false;
+        }
     }
 
     /**
