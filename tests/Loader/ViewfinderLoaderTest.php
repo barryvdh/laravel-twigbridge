@@ -6,7 +6,7 @@ use Mockery as m;
 use Barryvdh\TwigBridge\TwigEngine;
 use Barryvdh\TwigBridge\Loader\ViewfinderLoader;
 
-class TwigEngineTest extends \PHPUnit_Framework_TestCase
+class ViewfinderLoaderTest extends \PHPUnit_Framework_TestCase
 {
 
     public function tearDown()
@@ -57,13 +57,11 @@ class TwigEngineTest extends \PHPUnit_Framework_TestCase
         $finder->shouldReceive('find')->with('index')->once()->andReturn('/path/to/index.twig');
 
         $loader = $this->getLoader($finder);
-        $engine = $this->getTwig($loader);
+        $loader->getSource('index');
 
-        $this->assertSame('foo', $engine->get('index'));
     }
 
     /**
-     * @expectedException \InvalidArgumentException
      * @expectedException \Twig_Error_Loader
      */
     public function testNotFound(){
@@ -71,25 +69,13 @@ class TwigEngineTest extends \PHPUnit_Framework_TestCase
         $filesystem = m::mock('Illuminate\Filesystem\Filesystem');
         $filesystem->shouldReceive('exists')->with('index')->once()->andReturn(false);
 
-
         $finder = m::mock('Illuminate\View\FileViewFinder');
         $finder->shouldReceive('getFilesystem')->andReturn($filesystem);
-        $finder->shouldReceive('find')->with('index')->once()->andThrow('InvalidArgumentException');
+        $finder->shouldReceive('find')->with('index')->once()->andThrow('InvalidArgumentException', "View 'index' not found");
 
         $loader = $this->getLoader($finder);
-        $engine = $this->getTwig($loader);
+        $loader->getSource('index');
 
-        $engine->get('index');
-
-    }
-
-
-
-    protected function getTwig($loader)
-    {
-        $twig = new \Twig_Environment($loader);
-
-        return new TwigEngine($twig);
     }
 
     protected function getLoader($finder){
