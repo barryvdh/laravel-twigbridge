@@ -39,7 +39,7 @@ class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterfa
             try {
                 $this->cache[$name] = $this->finder->find($view);
             } catch (InvalidArgumentException $e) {
-                throw new Twig_Error_Loader(sprintf('Unable to find template "%s"', $name));
+                throw new Twig_Error_Loader($e->getMessage());
             }
             return $this->cache[$name];
         }
