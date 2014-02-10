@@ -17,8 +17,8 @@ abstract class TwigTemplate extends Twig_Template
      */
     public function display( array $context, array $blocks = array())
     {
-        $context = $this->fireEvents($context);
-        parent::display($context, $blocks);
+        $context = $this->fireEvents($this->env->mergeGlobals($context));
+        $this->displayWithErrorHandling($context, $blocks);
     }
     
     /**
@@ -28,7 +28,7 @@ abstract class TwigTemplate extends Twig_Template
      */
     protected function fireEvents($context){
         // Only fire events once
-        if($this->firedEvents){
+        if($this->firedEvents or !isset($context['__env'])){
             return $context;
         }
 
