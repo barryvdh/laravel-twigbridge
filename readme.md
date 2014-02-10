@@ -21,11 +21,11 @@ After updating composer, add the ServiceProvider to the providers array in app/c
     'Barryvdh\TwigBridge\ServiceProvider',
     
 ### Usage
-After install, you can just use View::make('index.twig'); or just View::make('index');
-The .twig extension is not needed when creating the view, but some IDE's provide autocomplete when you use .twig (in Twig files).
+After install, you can just use View::make('index');
+The .twig extension should be omitted in the View::make() call, just like Blade files. Within your Twig files, you can reference them with or without .twig.
 You can also use view composers/creators, just like in Blade templates.
 
-    View::composer('profile.twig', function($view)
+    View::composer('profile', function($view)
     {
         $view->with('count', User::count());
     });
