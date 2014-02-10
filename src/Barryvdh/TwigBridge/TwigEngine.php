@@ -24,8 +24,6 @@ class TwigEngine implements EngineInterface
     /**
      * {@inheritdoc}
      *
-     * It also supports \Twig_Template as name parameter.
-     *
      * @throws \Twig_Error if something went wrong like a thrown exception while rendering the template
      * @throws \Twig_Error_Loader if the template cannot be loaded
      */
