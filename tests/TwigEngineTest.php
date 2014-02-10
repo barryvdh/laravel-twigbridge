@@ -21,6 +21,15 @@ class TwigEngineTest extends \PHPUnit_Framework_TestCase
         $engine = $this->getTwig();
         $engine->get('error');
     }
+    
+    /**
+     * @expectedException \Twig_Error_Loader
+     */
+    public function testRenderNotFound()
+    {
+        $engine = $this->getTwig();
+        $engine->get('404');
+    }
 
     protected function getTwig()
     {
