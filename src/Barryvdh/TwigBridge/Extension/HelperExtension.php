@@ -9,16 +9,19 @@ class HelperExtension extends Twig_Extension
     protected $filters;
     protected $functions;
 
-    public function __construct(){
-        $this->filters = \Config::get('laravel-twigbridge::filters', array());
-        $this->functions = \Config::get('laravel-twigbridge::functions', array());
+    public function __construct($functions = array(), $filters = array())
+    {
+        $this->functions = $functions;
+        $this->filters = $filters;
     }
 
-    public function getName(){
+    public function getName()
+    {
         return 'laravel_helper_extension';
     }
 
-    public function getFunctions(){
+    public function getFunctions()
+    {
 
         $functions = array();
         foreach ($this->functions as $method => $twigFunction) {

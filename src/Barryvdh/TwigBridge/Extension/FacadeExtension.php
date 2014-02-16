@@ -5,11 +5,10 @@ use Twig_Extension;
 
 class FacadeExtension extends Twig_Extension
 {
-
     protected $facades;
 
-    public function __construct(){
-        $this->facades = \Config::get('laravel-twigbridge::facades', array());
+    public function __construct($facades){
+        $this->facades = $facades;
     }
 
     public function getName(){
@@ -17,13 +16,11 @@ class FacadeExtension extends Twig_Extension
     }
 
     public function getGlobals(){
-        $facades = array();
-        foreach($this->facades as $facade){
-            $caller = new ClassCaller;
-            $caller->setClass($facade);
-            $facades[$facade] = $caller;
+        $globals = array();
+        foreach($this->facades as $className){
+            $globals[$className] = new StaticCaller($className);
         }
-        return $facades;
+        return $globals;
     }
 
 }

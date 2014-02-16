@@ -65,11 +65,15 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                     $twig->addExtension(new \Twig_Extension_Debug());
                 }
 
+                $facades = $app['config']->get('laravel-twigbridge::facades', array());
+                $functions = $app['config']->get('laravel-twigbridge::functions', array());
+                $filters = $app['config']->get('laravel-twigbridge::filters', array());
+                
                 $twig->addExtension(new AuthExtension($app['auth']));
                 $twig->addExtension(new ConfigExtension($app['config']));
-                $twig->addExtension(new FacadeExtension());
+                $twig->addExtension(new FacadeExtension($facades));
                 $twig->addExtension(new FormExtension($app['form']));
-                $twig->addExtension(new HelperExtension());
+                $twig->addExtension(new HelperExtension($functions, $filters));
                 $twig->addExtension(new HtmlExtension($app['html']));
                 $twig->addExtension(new UrlExtension($app['url']));
                 $twig->addExtension(new SessionExtension($app['session']));
