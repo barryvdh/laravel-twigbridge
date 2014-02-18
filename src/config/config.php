@@ -57,9 +57,14 @@ return array(
    |--------------------------------------------------------------------------
    |
    | List of Functions & Filters that are made available to your Twig templates.
-   | Supports string, array, closure or Twig_SimpleFilter / Twig_SimpleFunction .
+   | Supports string, array, closure or Twig_SimpleFilter / Twig_SimpleFunction.
+   | The default options are used when no options are set.
    |
    */
+    'default_options' => array(
+        'is_safe'   => array('html'),
+    ),
+    
     'functions' => array(
 
     ),

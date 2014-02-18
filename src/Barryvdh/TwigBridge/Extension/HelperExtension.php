@@ -7,18 +7,26 @@ class HelperExtension extends Twig_Extension
 {
     protected $filters;
     protected $functions;
+    protected $defaults;
 
-    public function __construct($functions = array(), $filters = array())
+    public function __construct($functions = array(), $filters = array(), $defaults = array())
     {
         $this->functions = $functions;
         $this->filters = $filters;
+        $this->defaults = $defaults;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName()
     {
         return 'laravel_helper_extension';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions()
     {
         $functions = array();
@@ -35,6 +43,9 @@ class HelperExtension extends Twig_Extension
         return $functions;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFilters()
     {
         $filters = array();
@@ -58,7 +69,7 @@ class HelperExtension extends Twig_Extension
      * @return array
      */
     protected function parseCallable($method, $callable){
-        $options = array();
+        $options = $this->defaults;
         //If options array, extract the callable
         if(is_array($callable)){
             $options = $callable;
