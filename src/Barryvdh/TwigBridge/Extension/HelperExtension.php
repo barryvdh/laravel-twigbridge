@@ -1,7 +1,6 @@
 <?php
 namespace Barryvdh\TwigBridge\Extension;
 
-use InvalidArgumentException;
 use Twig_Extension;
 
 class HelperExtension extends Twig_Extension
@@ -22,33 +21,13 @@ class HelperExtension extends Twig_Extension
 
     public function getFunctions()
     {
-
         $functions = array();
-        foreach ($this->functions as $method => $twigFunction) {
-            $options = array();
-            if(is_a($twigFunction, 'Twig_SimpleFunction')){
-                $function = $twigFunction;
+        foreach ($this->functions as $method => $callable) {
+            if(is_a($callable, 'Twig_SimpleFunction')){
+                $function = $callable;
             }else{
-                if(is_array($twigFunction)){
-                    $methodName = $method;
-                    $options = $twigFunction;
-                    if(isset($options['callback'])){
-                        $twigFunction = $options['callback'];
-                        unset($options['callback']);
-                    }else{
-                        $twigFunction = $method;
-                    }
-                } elseif (is_string($twigFunction)) {
-                    $methodName = $twigFunction;
-                } elseif (is_callable($twigFunction)) {
-                    $methodName = $method;
-                } else {
-                    throw new InvalidArgumentException('Incorrect function type');
-                }
-
-                $function = new \Twig_SimpleFunction($methodName, function () use ($twigFunction) {
-                    return call_user_func_array($twigFunction, func_get_args());
-                }, $options);
+                list($method, $callable, $options) = $this->parseCallable($method, $callable);
+                $function = new \Twig_SimpleFunction($method, $callable, $options);
             }
             $functions[] = $function;
         }
@@ -59,38 +38,48 @@ class HelperExtension extends Twig_Extension
     public function getFilters()
     {
         $filters = array();
-        foreach ($this->filters as $method => $twigFilter) {
-            $options = array();
-            if(is_a($twigFilter, 'Twig_SimpleFilter')){
-                $filter = $twigFilter;
+        foreach ($this->filters as $method => $callable) {
+            if(is_a($callable, 'Twig_SimpleFilter')){
+                $filter = $callable;
             }else{
-                if(is_array($twigFilter)){
-                    $methodName = $method;
-                    $options = $twigFilter;
-                    if(isset($options['callback'])){
-                        $twigFilter = $options['callback'];
-                        unset($options['callback']);
-                    }else{
-                        $twigFilter = $method;
-                    }
-                } elseif (is_string($twigFilter)) {
-                    $methodName = $twigFilter;
-                } elseif (is_callable($twigFilter)) {
-                    $methodName = $method;
-                } else {
-                    throw new InvalidArgumentException('Incorrect function filter');
-                }
-
-                $filter = new \Twig_SimpleFilter($methodName, function () use ($twigFilter) {
-                    return call_user_func_array($twigFilter, func_get_args());
-                }, $options);
+                list($method, $callable, $options) = $this->parseCallable($method, $callable);
+                $filter = new \Twig_SimpleFilter($method, $callable, $options);
             }
-
             $filters[] = $filter;
         }
-
         return $filters;
     }
 
+    /**
+     * Parse the method/callable
+     *
+     * @param $method
+     * @param $callable
+     * @return array
+     */
+    protected function parseCallable($method, $callable){
+        $options = array();
+        //If options array, extract the callable
+        if(is_array($callable)){
+            $options = $callable;
+            if(isset($options['callback'])){
+                $callable = $options['callback'];
+                unset($options['callback']);
+            }else{
+                $callable = $method;
+            }
+        }
+        //If string, split on the @ for Laravel style calling methods on classes
+        if (is_string($callable)) {
+            //Numeric index, methodname should be the callable string.
+            if(!is_string($method)){
+                $method = $callable;
+            }
+            if(strpos($callable,'@') !== false){
+                $callable = explode('@', $callable,2);
+            }
+        }
+        return array($method, $callable, $options);
+    }
 
 }
