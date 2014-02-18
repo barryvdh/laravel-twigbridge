@@ -12,10 +12,16 @@ class UrlExtension extends \Twig_Extension
         $this->url = $url;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_url';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         return array(
             new \Twig_SimpleFunction('asset', array($this->url, 'asset'), array('is_safe' => array('html'))),

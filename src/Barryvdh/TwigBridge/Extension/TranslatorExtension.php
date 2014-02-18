@@ -12,10 +12,16 @@ class TranslatorExtension extends \Twig_Extension
         $this->translator = $translator;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_translator';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         return array(
             new \Twig_SimpleFunction('trans', array($this->translator, 'trans'), array('is_safe' => array('html'))),

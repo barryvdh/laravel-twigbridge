@@ -12,10 +12,16 @@ class SessionExtension extends \Twig_Extension
         $this->session = $session;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_session';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         return array(
             new \Twig_SimpleFunction('csrf_token', array($this->session, 'token'), array('is_safe' => array('html'))),

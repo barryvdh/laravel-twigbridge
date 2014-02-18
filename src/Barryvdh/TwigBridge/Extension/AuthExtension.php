@@ -12,10 +12,16 @@ class AuthExtension extends \Twig_Extension
         $this->auth = $auth;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_auth';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         return array(
             new \Twig_SimpleFunction('auth_check', array($this->auth, 'check')),

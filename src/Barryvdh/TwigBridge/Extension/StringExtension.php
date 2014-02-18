@@ -6,10 +6,16 @@ use Illuminate\Support\Str;
 class StringExtension extends \Twig_Extension
 {
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_string';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         return array(
             new \Twig_SimpleFunction('str_*', function($name){
@@ -20,6 +26,9 @@ class StringExtension extends \Twig_Extension
         );
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFilters(){
         return array(
             new \Twig_SimpleFilter('camel_case', array('Illuminate\Support\Str', 'camel'), array('is_safe' => array('html'))),

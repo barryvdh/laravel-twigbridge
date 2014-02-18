@@ -11,10 +11,16 @@ class FacadeExtension extends Twig_Extension
         $this->facades = $facades;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'facade_extension';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getGlobals(){
         $globals = array();
         foreach($this->facades as $className){

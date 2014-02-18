@@ -12,10 +12,16 @@ class FormExtension extends \Twig_Extension
         $this->form = $form;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_form';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         $form = $this->form;
         return array(

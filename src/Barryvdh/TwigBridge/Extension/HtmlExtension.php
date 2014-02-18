@@ -12,10 +12,16 @@ class HtmlExtension extends \Twig_Extension
         $this->html = $html;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_html';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         $html = $this->html;
         return array(

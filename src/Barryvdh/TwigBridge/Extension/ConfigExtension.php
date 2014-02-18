@@ -12,10 +12,16 @@ class ConfigExtension extends \Twig_Extension
         $this->config = $config;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getName(){
         return 'laravel_config';
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public function getFunctions(){
         return array(
             new \Twig_SimpleFunction('config_get', array($this->config, 'get'), array('is_safe' => array('html'))),
