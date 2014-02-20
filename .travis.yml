@@ -7,9 +7,14 @@ php:
   - hhvm
   
 env:
-  - LARAVEL_VERSION="4.0.x"
   - LARAVEL_VERSION="4.1.x"
-  - LARAVEL_VERSION="4.2.x"
+  
+matrix:
+  include:
+    - php: 5.3
+      env: LARAVEL_VERSION="4.0.x"
+    - php: 5.4
+      env: LARAVEL_VERSION="4.2.x"
 
 before_script:
   - composer self-update
