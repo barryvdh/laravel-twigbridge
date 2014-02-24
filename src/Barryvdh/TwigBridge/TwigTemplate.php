@@ -39,13 +39,13 @@ abstract class TwigTemplate extends Twig_Template
         try{
             $env->callCreator($view = new View($env, $env->getEngineResolver()->resolve('twig'), $this->getTemplateName(), null, $context));
         }catch(\Exception $e){
-            throw new \Twig_Error_Runtime(sprintf('An exception has been thrown during the View Creator of a template ("%s").', $e->getMessage()), -1, $this->getTemplateName(), $e);
+            throw new \Twig_Error_Runtime(sprintf('An exception has been thrown during the View Creator of template "%s" ("%s)', $this->getTemplateName(), $e->getMessage()), $e->getLine(), $e->getFile(), $e);
         }
 
         try{
             $env->callComposer($view);
         }catch(\Exception $e){
-            throw new \Twig_Error_Runtime(sprintf('An exception has been thrown during the View Composer of a template ("%s").', $e->getMessage()), -1, $this->getTemplateName(), $e);
+            throw new \Twig_Error_Runtime(sprintf('An exception has been thrown during the View Composer of template "%s" ("%s)', $this->getTemplateName(), $e->getMessage()), $e->getLine(), $e->getFile(), $e);
         }
 
         $this->setFiredEvents(true);
