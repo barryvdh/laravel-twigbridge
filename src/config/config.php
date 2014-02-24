@@ -62,7 +62,12 @@ return array(
    |
    */
     'default_options' => array(
-        'is_safe'   => array('html'),
+        'needs_environment' => false,
+        'needs_context'     => false,
+        'is_safe'           => null,
+        'is_safe_callback'  => null,
+        'pre_escape'        => null,
+        'preserves_safety'  => null,
     ),
     
     'functions' => array(
