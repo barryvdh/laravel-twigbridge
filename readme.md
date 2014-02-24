@@ -69,6 +69,7 @@ You can also use an instance of Twig_SimpleFunction or Twig_SimpleFilter. Beside
 
     'functions' => array(
         'simple_function',
+        'class_function' => 'method@MyClass',
         'other_function' => array(
             'is_safe' => array('html')
         ),
