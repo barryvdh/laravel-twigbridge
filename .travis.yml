@@ -13,7 +13,6 @@ before_script:
   - composer self-update
   - composer require illuminate/support:${LARAVEL_VERSION} --no-update
   - composer require illuminate/view:${LARAVEL_VERSION} --no-update
-  - composer require illuminate/foundation:${LARAVEL_VERSION} --no-update --dev
   - composer install --no-interaction --prefer-source --dev
 
 script:
