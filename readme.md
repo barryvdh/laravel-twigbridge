@@ -22,6 +22,12 @@ After updating composer, add the ServiceProvider to the providers array in app/c
 'Barryvdh\TwigBridge\ServiceProvider',
 ```
 
+You can add the Twig Facade to have easy access to Twig_Environment, ie. `Twig::render('template.twig')`.
+
+```php
+'Twig' => 'Barryvdh\TwigBridge\Twig',
+```
+
 ### Usage
 After install, you can just use View::make('index');
 The .twig extension should be omitted in the View::make() call, just like Blade files. Within your Twig files, you can reference them with or without .twig.
@@ -70,7 +76,7 @@ Global variables:
 To publish a configuration file, you can run the following command:
 
 ```
-$ php artisan config:publish rcrowe/twigbridge
+$ php artisan config:publish barryvdh/laravel-twigbridge
 ```
 
 Change your config to choose what helpers/filters you want to use, and what Facades to register. You can also pass in a callback or array to define options.
@@ -105,5 +111,27 @@ You can also use an instance of Twig_SimpleFunction or Twig_SimpleFilter. Beside
 
 ### Extend
 
-The Twig_Environment is available in \App::make('twig'), so you can change the lexer, add Extensions etc.
- 
+The Twig_Environment is available as 'twig' in the App Container, so you can access it via app('twig') or App::make('twig').
+The ChainLoader is 'twig.loader', the array templates are in 'twig.templates'.
+You can also use the Twig Facade to access the Twig_Environment functions directly.
+
+```php
+//Using the App container
+$twig = app('twig');
+$twig->addFunction(new Twig_SimpleFunction(..));
+
+$loader = App::make('twig.loader');
+$loader->addLoader($myLoader);
+
+//Using the Facade
+Twig::addGlobal('key', $value);
+Twig::addFunction(new Twig_SimpleFunction(..));
+Twig::getLoader()->addLoader($myLoader);
+
+//Adding templates to the array loader
+App::extend('twig.templates', function($templates){
+        $templates['hello'] = 'Hello World!';
+        return $templates;
+    });
+echo Twig::render('hello'); //Hello World!
+ ```
