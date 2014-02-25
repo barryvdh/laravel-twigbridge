@@ -17,7 +17,6 @@
         "symfony/twig-bridge": ">=2.3"
     },
     "require-dev": {
-        "illuminate/foundation": "4.x",
         "phpunit/phpunit": "~3.7.0",
         "mockery/mockery": "~0.7.2"
     },
