@@ -18,18 +18,21 @@ Require this package in your composer.json and run composer update (or run `comp
 
 After updating composer, add the ServiceProvider to the providers array in app/config/app.php
 
-    'Barryvdh\TwigBridge\ServiceProvider',
-    
+```php
+'Barryvdh\TwigBridge\ServiceProvider',
+```
+
 ### Usage
 After install, you can just use View::make('index');
 The .twig extension should be omitted in the View::make() call, just like Blade files. Within your Twig files, you can reference them with or without .twig.
 You can also use view composers/creators, just like in Blade templates.
 
-    View::composer('profile', function($view)
-    {
-        $view->with('count', User::count());
-    });
-
+```php
+View::composer('profile', function($view)
+{
+	$view->with('count', User::count());
+});
+```
 
 ### Extensions
 
@@ -64,34 +67,42 @@ Global variables:
     - Check a directory or file for Twig errors, for exampele `php artisan twig:lint app/views`
     
 ### Configure
+To publish a configuration file, you can run the following command:
+
+```
+$ php artisan config:publish rcrowe/twigbridge
+```
+
 Change your config to choose what helpers/filters you want to use, and what Facades to register. You can also pass in a callback or array to define options.
 You can also use an instance of Twig_SimpleFunction or Twig_SimpleFilter. Besides facades, you can also add your Models.
 
-    'functions' => array(
-        'simple_function',
-        'class_function' => 'method@MyClass',
-        'other_function' => array(
-            'is_safe' => array('html')
-        ),
-        'call_me' => array(
-            'is_safe' => array('html'),
-            'callback' => function($value){ 
-                    return phone($value);
-                }
-        )
-    ),
+```php
+'functions' => array(
+	'simple_function',
+	'class_function' => 'method@MyClass',
+	'other_function' => array(
+		'is_safe' => array('html')
+	),
+	'call_me' => array(
+		'is_safe' => array('html'),
+		'callback' => function($value){ 
+				return phone($value);
+			}
+	)
+),
 
-    'filters' => array(
-        'filter_this' => function($value){
-                return doSomething($value);
-            }
-    ),
+'filters' => array(
+	'filter_this' => function($value){
+			return doSomething($value);
+		}
+),
 
-    'facades' => array(
-        'Auth', 
-        'MyModel'
-    )
-    
+'facades' => array(
+	'Auth', 
+	'MyModel'
+)
+```
+
 ### Extend
 
 The Twig_Environment is available in \App::make('twig'), so you can change the lexer, add Extensions etc.
