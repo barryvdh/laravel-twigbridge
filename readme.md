@@ -54,6 +54,7 @@ Functions:
  * form_* (All the Form::* methods, snake_cased)
  * html_* (All the Html::* methods, snake_cased)
  * str_* (All the Str::* methods, snake_cased)
+ * url_* (All the URL::* methods, snake_cased)
  
 Filters:
  * camel_case, snake_case, studly_case
