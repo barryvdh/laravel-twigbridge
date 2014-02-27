@@ -2,7 +2,7 @@
 namespace Barryvdh\TwigBridge\Extension;
 
 use Illuminate\Routing\UrlGenerator;
-
+use  Illuminate\Support\Str;
 
 class UrlExtension extends \Twig_Extension
 {
@@ -23,14 +23,19 @@ class UrlExtension extends \Twig_Extension
      * {@inheritDoc}
      */
     public function getFunctions(){
+        $url = $this->url;
         return array(
-            new \Twig_SimpleFunction('asset', array($this->url, 'asset'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('action', array($this->url, 'action'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('url', array($this->url, 'to'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('route', array($this->url, 'route'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('secure_url', array($this->url, 'secure'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('secure_asset', array($this->url, 'secureAsset'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('asset', array($url, 'asset'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('action', array($url, 'action'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('url', array($url, 'to'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('route', array($url, 'route'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('secure_url', array($url, 'secure'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('secure_asset', array($url, 'secureAsset'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('url_*', function($name) use($url){
+                    $arguments = array_slice(func_get_args(), 1);
+                    $name = Str::camel($name);
+                    return call_user_func_array(array($url, $name), $arguments);
+                })
         );
     }
-
 }
