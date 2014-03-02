@@ -2,8 +2,12 @@
 
 namespace Barryvdh\TwigBridge;
 
-use Twig_Template;
+use Barryvdh\TwigBridge\Loader\FilenameLoaderInterface;
 use Illuminate\View\View;
+use Twig_Error;
+use Twig_Error_Loader;
+use Twig_Error_Runtime;
+use Twig_Template;
 
 /**
  * Default base class for compiled templates.
@@ -11,6 +15,26 @@ use Illuminate\View\View;
 abstract class TwigTemplate extends Twig_Template
 {
     protected $firedEvents = false;
+    
+    /**
+     * Extended to link to the real template file, when possible.
+     * {@inheritdoc}
+     */
+    public function render(array $context){
+        try{
+            return parent::render($context);
+        }catch(Twig_Error $e){
+            $loader = $this->env->getLoader();
+            $name = $e->getTemplateFile();
+            $line = $e->getTemplateLine();
+            if($line && $loader instanceof FilenameLoaderInterface){
+                try{
+                    throw new \ErrorException($e->getMessage(), $e->getCode(), 1, $loader->getFilename($name), $line);
+                }catch(Twig_Error_Loader $e2){}
+            }
+            throw $e;
+        }
+    }
     
     /**
      * {@inheritdoc}
@@ -39,13 +63,13 @@ abstract class TwigTemplate extends Twig_Template
         try{
             $env->callCreator($view = new View($env, $env->getEngineResolver()->resolve('twig'), $this->getTemplateName(), null, $context));
         }catch(\Exception $e){
-            throw new \Twig_Error_Runtime(sprintf('An exception has been thrown during the View Creator of template "%s" ("%s)', $this->getTemplateName(), $e->getMessage()), $e->getLine(), $e->getFile(), $e);
+            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the View Creator of template "%s" ("%s)', $this->getTemplateName(), $e->getMessage()), $e->getLine(), $e->getFile(), $e);
         }
 
         try{
             $env->callComposer($view);
         }catch(\Exception $e){
-            throw new \Twig_Error_Runtime(sprintf('An exception has been thrown during the View Composer of template "%s" ("%s)', $this->getTemplateName(), $e->getMessage()), $e->getLine(), $e->getFile(), $e);
+            throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the View Composer of template "%s" ("%s)', $this->getTemplateName(), $e->getMessage()), $e->getLine(), $e->getFile(), $e);
         }
 
         $this->setFiredEvents(true);
