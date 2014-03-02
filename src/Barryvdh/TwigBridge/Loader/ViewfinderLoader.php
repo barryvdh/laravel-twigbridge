@@ -2,13 +2,13 @@
 namespace Barryvdh\TwigBridge\Loader;
 
 use Illuminate\Filesystem\Filesystem;
-use Illuminate\View\FileViewFinder;
+use Illuminate\View\ViewFinderInterface;
 use Twig_LoaderInterface;
 use Twig_ExistsLoaderInterface;
 use InvalidArgumentException;
 use Twig_Error_Loader;
 
-class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface
+class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterface, FilenameLoaderInterface
 {
 
     protected $finder;
@@ -16,12 +16,28 @@ class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterfa
     protected $extension;
     protected $cache = array();
 
-    public function __construct(FileViewFinder $finder, $extension = 'twig'){
+    /**
+     * Constructor.
+     *
+     * @param ViewFinderInterface $finder The FileViewFinder instance to look
+     * @param \Illuminate\Filesystem\Filesystem $files
+     * @param string $extension
+     */
+    public function __construct(ViewFinderInterface $finder, Filesystem $files, $extension = 'twig'){
         $this->finder = $finder;
-        $this->files = $finder->getFilesystem();
+        $this->files = $files;
         $this->extension = $extension;
     }
 
+    /**
+     * Find the path of a template
+     *
+     * @param string $name The name of the template to load
+     *
+     * @return string The path of the template file.
+     *
+     * @throws Twig_Error_Loader When $name is not found
+     */
     protected function findTemplate($name){
 
         if(isset($this->cache[$name])){
@@ -79,5 +95,13 @@ class ViewfinderLoader implements Twig_LoaderInterface, Twig_ExistsLoaderInterfa
     public function isFresh($name, $time)
     {
         return $this->files->lastModified( $this->findTemplate($name) ) <= $time;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getFilename($name)
+    {
+        return $this->findTemplate($name);
     }
 }

@@ -1,5 +1,6 @@
 <?php namespace Barryvdh\TwigBridge;
 
+use Barryvdh\TwigBridge\Console\ClearCommand;
 use Barryvdh\TwigBridge\Extension\AuthExtension;
 use Barryvdh\TwigBridge\Extension\ConfigExtension;
 use Barryvdh\TwigBridge\Extension\FacadeExtension;
@@ -10,8 +11,7 @@ use Barryvdh\TwigBridge\Extension\SessionExtension;
 use Barryvdh\TwigBridge\Extension\StringExtension;
 use Barryvdh\TwigBridge\Extension\TranslatorExtension;
 use Barryvdh\TwigBridge\Extension\UrlExtension;
-
-use Barryvdh\TwigBridge\Console\ClearCommand;
+use Barryvdh\TwigBridge\Loader\ChainLoader;
 
 /**
  * Twig integration for Laravel 4
@@ -86,7 +86,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
 
         $app['twig.loader.viewfinder'] = $app->share(function ($app) {
                 $extension = $app['config']->get('laravel-twigbridge::config.extension', 'twig');
-                return new Loader\ViewfinderLoader($app['view']->getFinder(), $extension);
+                return new Loader\ViewfinderLoader($app['view']->getFinder(), $app['files'], $extension);
             });
 
         $app['twig.loader.filesystem'] = $app->share(function ($app) {
@@ -98,7 +98,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
             });
 
         $app['twig.loader'] = $app->share(function ($app) {
-                return new \Twig_Loader_Chain(array(
+                return new ChainLoader(array(
                     $app['twig.loader.array'],
                     $app['twig.loader.viewfinder'],
                     $app['twig.loader.filesystem'],
