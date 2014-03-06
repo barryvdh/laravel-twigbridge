@@ -39,7 +39,7 @@ class UrlExtension extends \Twig_Extension
         );
     }
 
-    protected function url($path = null, $parameters = array(), $secure = null){
+    public function url($path = null, $parameters = array(), $secure = null){
         return $this->url->to($path, $parameters, $secure);
     }
 }
