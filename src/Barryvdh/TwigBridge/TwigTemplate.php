@@ -29,7 +29,7 @@ abstract class TwigTemplate extends Twig_Template
             $line = $e->getTemplateLine();
             if($line && $loader instanceof FilenameLoaderInterface){
                 try{
-                    throw new \ErrorException($e->getMessage(), $e->getCode(), 1, $loader->getFilename($name), $line);
+                    throw new \ErrorException($e->getMessage(), $e->getCode(), 1, $loader->getFilename($name), $line, $e);
                 }catch(Twig_Error_Loader $e2){}
             }
             throw $e;
