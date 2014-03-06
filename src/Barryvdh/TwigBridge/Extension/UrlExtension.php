@@ -27,7 +27,7 @@ class UrlExtension extends \Twig_Extension
         return array(
             new \Twig_SimpleFunction('asset', array($url, 'asset'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('action', array($url, 'action'), array('is_safe' => array('html'))),
-            new \Twig_SimpleFunction('url', array($url, 'to'), array('is_safe' => array('html'))),
+            new \Twig_SimpleFunction('url', array($this, 'url'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('route', array($url, 'route'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('secure_url', array($url, 'secure'), array('is_safe' => array('html'))),
             new \Twig_SimpleFunction('secure_asset', array($url, 'secureAsset'), array('is_safe' => array('html'))),
@@ -37,5 +37,9 @@ class UrlExtension extends \Twig_Extension
                     return call_user_func_array(array($url, $name), $arguments);
                 })
         );
+    }
+
+    protected function url($path = null, $parameters = array(), $secure = null){
+        return $this->url->to($path, $parameters, $secure);
     }
 }
