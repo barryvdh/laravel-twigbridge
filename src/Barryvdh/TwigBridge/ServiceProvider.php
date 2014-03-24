@@ -47,12 +47,21 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 $app['twig.options'] = array_replace(
                     array(
                         'debug' => $app['config']['app.debug'],
-                        'cache' => $app['path.storage'].'/views/twig',
+                        'cache' => $app['path.storage'].'/twig',
                         'base_template_class' => 'Barryvdh\TwigBridge\TwigTemplate',
                     ),
                     $app['config']->get('laravel-twigbridge::config.options', array()),
                     $app['twig.options']
                 );
+                
+                $cacheDir = $app['twig.options']['cache'];
+                if (!$app['files']->isDirectory($cacheDir)) {
+                    if($app['files']->makeDirectory($cacheDir, 0777, true)){
+                        $app['files']->put($cacheDir.'/.gitignore', "*\n!.gitignore");
+                    }else{
+                        throw new \Exception("Cannot create directory '$cacheDir'..");
+                    }
+                }
 
                 $twig = new \Twig_Environment($app['twig.loader'], $app['twig.options']);
                 

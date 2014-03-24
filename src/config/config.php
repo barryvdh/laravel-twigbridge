@@ -44,7 +44,7 @@ return array(
         'charset'               => 'UTF-8',
         'base_template_class'   => 'Barryvdh\TwigBridge\TwigTemplate',
         'auto_reload'           => null,
-        'cache'                 => storage_path('views/twig'),
+        'cache'                 => storage_path('twig'),
         'strict_variables'      => true,
         'autoescape'            => 'html',
         'optimizations'         => -1,
