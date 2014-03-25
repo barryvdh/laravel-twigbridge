@@ -55,7 +55,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider {
                 );
                 
                 $cacheDir = $app['twig.options']['cache'];
-                if (!$app['files']->isDirectory($cacheDir)) {
+                if ($cacheDir && !$app['files']->isDirectory($cacheDir)) {
                     if($app['files']->makeDirectory($cacheDir, 0777, true)){
                         $app['files']->put($cacheDir.'/.gitignore', "*\n!.gitignore");
                     }else{
