@@ -63,6 +63,17 @@ Filters:
 Global variables:
  * app: the Illuminate\Foundation\Application object
  * errors: The $errors MessageBag from the Validator (always available)
+
+
+### Example Template Syntax
+
+In a Blade template, if you had a route to edit a task in a Task/Todo application, you would use the following syntax to link to a route.
+
+    {{ link_to_route('tasks.edit', 'Edit', $task->id, array('class' => 'btn btn-primary')) }}
+
+In a Twig template you would do the same thing using the following syntax. Notice the task object drops the dollar sign (`$`) and instead of an arrow (`->`) you use a period (`'.'`). Also, you convert the array to a Python/Javascript dictionary type syntax.
+
+    {{ link_to_route('tasks.edit', 'Edit', task.id, {'class': 'btn btn-primary'}) }}
  
  
 ### Commands
