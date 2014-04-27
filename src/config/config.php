@@ -64,9 +64,9 @@ return array(
     'default_options' => array(
         'needs_environment' => false,
         'needs_context'     => false,
-        'is_safe'           => null,
-        'is_safe_callback'  => null,
-        'pre_escape'        => null,
+        'is_safe'           => null, // null or array('html')
+        'is_safe_callback'  => null, // null or callback
+        'pre_escape'        => null, // null or 'html'
         'preserves_safety'  => null,
     ),
     
