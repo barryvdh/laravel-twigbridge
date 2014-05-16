@@ -72,8 +72,6 @@ abstract class TwigTemplate extends Twig_Template
             throw new Twig_Error_Runtime(sprintf('An exception has been thrown during the View Composer of template "%s" ("%s)', $this->getTemplateName(), $e->getMessage()), $e->getLine(), $e->getFile(), $e);
         }
 
-        $this->setFiredEvents(true);
-
         return $view->getData();
     }
 
