@@ -39,17 +39,17 @@ return array(
   |                   set it to 0 to disable).
   |
   */
-    'options' => array(
-        'debug'                 => Config::get('app.debug'),
-        'charset'               => 'UTF-8',
-        'base_template_class'   => 'Barryvdh\TwigBridge\TwigTemplate',
-        'auto_reload'           => null,
-        'cache'                 => storage_path('twig'),
-        'strict_variables'      => true,
-        'autoescape'            => 'html',
-        'optimizations'         => -1,
-    ),
 
+  'options' => array(
+    'debug'                 => Config::get('app.debug'),
+    'charset'               => 'UTF-8',
+    'base_template_class'   => 'Barryvdh\TwigBridge\TwigTemplate',
+    'auto_reload'           => null,
+    'cache'                 => storage_path('twig'),
+    'strict_variables'      => true,
+    'autoescape'            => 'html',
+    'optimizations'         => -1,
+  ),
 
   /*
    |--------------------------------------------------------------------------
@@ -61,26 +61,26 @@ return array(
    | The default options are used when no options are set.
    |
    */
-    'default_options' => array(
-        'needs_environment' => false,
-        'needs_context'     => false,
-        'is_safe'           => null, // null or array('html')
-        'is_safe_callback'  => null, // null or callback
-        'pre_escape'        => null, // null or 'html'
-        'preserves_safety'  => null,
-    ),
-    
-    'functions' => array(
 
-    ),
+  'default_options' => array(
+    'needs_environment' => false,
+    'needs_context'     => false,
+    'is_safe'           => null, // null or array('html')
+    'is_safe_callback'  => null, // null or callback
+    'pre_escape'        => null, // null or 'html'
+    'preserves_safety'  => null,
+  ),
 
-    'filters' => array(
+  'functions' => array(
 
-    ),
+  ),
 
-    'facades' => array(
+  'filters' => array(
 
-    )
+  ),
 
+  'facades' => array(
+
+  )
 
 );
