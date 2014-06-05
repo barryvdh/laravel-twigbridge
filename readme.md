@@ -97,7 +97,7 @@ You can also use an instance of Twig_SimpleFunction or Twig_SimpleFilter. Beside
 ```php
 'functions' => array(
 	'simple_function',
-	'class_function' => 'method@MyClass',
+	'class_function' => 'MyClass@method',
 	'other_function' => array(
 		'is_safe' => array('html')
 	),
