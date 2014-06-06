@@ -22,7 +22,7 @@ class ViewfinderLoaderTest extends \PHPUnit_Framework_TestCase
         $finder = m::mock('Illuminate\View\FileViewFinder');
         $finder->shouldReceive('getFilesystem')->andReturn($filesystem);
 
-        $loader = $this->getLoader($finder);
+        $loader = $this->getLoader($finder, $filesystem);
 
         $this->assertTrue($loader->exists('index.twig'));
 
@@ -38,7 +38,7 @@ class ViewfinderLoaderTest extends \PHPUnit_Framework_TestCase
         $finder->shouldReceive('getFilesystem')->andReturn($filesystem);
         $finder->shouldReceive('find')->with('index')->once()->andReturn('/path/to/index.twig');
 
-        $loader = $this->getLoader($finder);
+        $loader = $this->getLoader($finder, $filesystem);
 
         $this->assertTrue($loader->exists('index'));
 
@@ -56,7 +56,7 @@ class ViewfinderLoaderTest extends \PHPUnit_Framework_TestCase
         $finder->shouldReceive('getFilesystem')->andReturn($filesystem);
         $finder->shouldReceive('find')->with('index')->once()->andReturn('/path/to/index.twig');
 
-        $loader = $this->getLoader($finder);
+        $loader = $this->getLoader($finder, $filesystem);
         $loader->getSource('index');
 
     }
@@ -73,13 +73,13 @@ class ViewfinderLoaderTest extends \PHPUnit_Framework_TestCase
         $finder->shouldReceive('getFilesystem')->andReturn($filesystem);
         $finder->shouldReceive('find')->with('index')->once()->andThrow('InvalidArgumentException', "View 'index' not found");
 
-        $loader = $this->getLoader($finder);
+        $loader = $this->getLoader($finder, $filesystem);
         $loader->getSource('index');
 
     }
 
-    protected function getLoader($finder){
-        return new ViewfinderLoader($finder, '.twig');
+    protected function getLoader($finder, $filesystem){
+        return new ViewfinderLoader($finder, $filesystem, '.twig');
     }
 
 }
