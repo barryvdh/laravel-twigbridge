@@ -14,7 +14,7 @@ See http://twig.sensiolabs.org/ for more info about Twig Templating
 ### Install
 Require this package in your composer.json and run composer update (or run `composer require barryvdh/laravel-twigbridge:dev-master` directly):
 
-    "barryvdh/laravel-twigbridge": "dev-master"
+    "barryvdh/laravel-twigbridge": "0.3.x"
 
 After updating composer, add the ServiceProvider to the providers array in app/config/app.php
 
