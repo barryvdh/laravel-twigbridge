@@ -1,5 +1,7 @@
 ## Laravel 4 TwigBridge
 
+_Note: This package is deprecated in favor of the 0.6.x-branch of https://github.com/rcrowe/TwigBridge. Please try the 0.6-beta, which should be very similar and provide the same functionality. Further progress will take place there._
+
 This packages adds Twig as a Laravel Template Engine:
 
 * Use .twig files just like Blade/PHP Templates
